@@ -14,7 +14,7 @@ module.exports = {
             });
         })
 
-		message.reply(`\n${unassigned} role(s) have been removed successfully`)
+		message.reply(`\n${unassigned} role(s) have been removed successfully.`)
             .then(msg=>{
                 setTimeout(() => msg.delete(), 10000)
             });

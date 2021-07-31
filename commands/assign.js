@@ -14,7 +14,7 @@ module.exports = {
             });
         })
 
-		message.reply(`\n${assigned} role(s) have been assigned successfully`)
+		message.reply(`\n${assigned} role(s) have been assigned successfully.`)
             .then(msg=>{
                 setTimeout(() => msg.delete(), 10000)
             });

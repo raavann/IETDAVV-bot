@@ -3,6 +3,7 @@ const Discord = require('discord.js');
 const conf = require('./config.json');
 const prefix = conf.prefix;
 const token = conf.TOKEN;
+const mustRoles = require('./roles.json').must;
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
@@ -17,26 +18,15 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
     console.log(`Logged in as ${client.user.tag}!`);
-
-    // let guild = client.guilds.cache.get('859292086989881364'); 
-    // //'859292086989881364') -> main server
-    // //861949315584884748 -> suresj's
-    // guild.members.fetch().then((user) => {
-
-    //     user.forEach((member,id)=>{
-    //         roles.must.forEach(r=>{
-    //             member.roles.add(r.id);
-    //             console.log('role assigned')
-    //         });
-    //     });
-
-        
-    // }).catch(console.error);
-    // console.log('ended');
 });
 
 
 client.on("message", message => {
+
+    if(message.channel.id == '870579705152155658'){ //roles channel id
+        setTimeout(()=> message.delete(),10000)
+    } 
+
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
     const args = message.content.slice(prefix.length).trim().split(/ +/);
@@ -60,6 +50,10 @@ client.on("message", message => {
     setTimeout(()=> message.delete(),10000)
 });
 
-
+client.on("guildMemberAdd", guildMember=>{
+    mustRoles.map(role=>{
+        guildMember.roles.add(role.id);
+    });
+});
 
 client.login(token);
