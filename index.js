@@ -1,27 +1,40 @@
 const fs = require('fs');
 const Discord = require('discord.js');
-const { prefix, token } = require('./config.json');
+const conf = require('./config.json');
+const prefix = conf.prefix;
+const token = conf.TOKEN;
 
 const client = new Discord.Client();
 client.commands = new Discord.Collection();
 
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
-
 
 for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	client.commands.set(command.name, command);
 }
 
-for (const file of eventFiles) {
-	const event = require(`./events/${file}`);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args));
-	}
-}
+
+client.once('ready', () => {
+    console.log(`Logged in as ${client.user.tag}!`);
+
+    // let guild = client.guilds.cache.get('859292086989881364'); 
+    // //'859292086989881364') -> main server
+    // //861949315584884748 -> suresj's
+    // guild.members.fetch().then((user) => {
+
+    //     user.forEach((member,id)=>{
+    //         roles.must.forEach(r=>{
+    //             member.roles.add(r.id);
+    //             console.log('role assigned')
+    //         });
+    //     });
+
+        
+    // }).catch(console.error);
+    // console.log('ended');
+});
+
 
 client.on("message", message => {
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -49,4 +62,4 @@ client.on("message", message => {
 
 
 
-client.login('ODYwNDIzNTM4NTA2MjAzMTg3.YN7B3Q.-B5W9R-_Cl9NRyg1EkCi_dBsJbs');
+client.login(token);
