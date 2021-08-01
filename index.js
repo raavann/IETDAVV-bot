@@ -23,8 +23,9 @@ client.once('ready', () => {
 
 client.on("message", message => {
 
-    if(message.channel.id == '870579705152155658'){ //roles channel id
-        setTimeout(()=> message.delete(),10000)
+    if(message.channel.id == '870579705152155658' &&  !message.content.startsWith(prefix) && !message.member.hasPermission('ADMINISTRATOR')){
+        message.delete();
+        return;
     } 
 
     if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -32,9 +33,24 @@ client.on("message", message => {
     const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
-    if (!client.commands.has(commandName)) return;
+    const command = client.commands.get(commandName)
+        || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
-    const command = client.commands.get(commandName);
+    if (!command){
+        if(message.channel.id == '870579705152155658'){
+            message.delete();
+        }
+        return;
+    }
+
+	if (command.args && !args.length) {
+		let reply = `You didn't provide any arguments, ${message.author}!`;
+
+		if (command.usage) {
+			reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+		}
+		return message.channel.send(reply);
+	}
 
 	try {
 		command.execute(message, args)
@@ -43,11 +59,11 @@ client.on("message", message => {
 		console.error(error);
 		message.reply('There was an error trying to execute that command!\nMaybe you passed an invalid argument!\nPlease try again. <3')
             .then(msg =>{
-                setTimeout(() => msg.delete(), 10000)
+                setTimeout(() => msg.delete(), 6000)
             });
         
 	}
-    setTimeout(()=> message.delete(),10000)
+    setTimeout(()=> message.delete(),4000)
 });
 
 client.on("guildMemberAdd", guildMember=>{

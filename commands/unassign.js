@@ -1,6 +1,7 @@
 const ROLES = require('../roles.json')
 module.exports = {
 	name: 'unassign',
+    aliases : ['un'],
 	description: 'Deletes the roles for the user!',
 	execute(message, args) {
 
@@ -16,7 +17,7 @@ module.exports = {
 
 		message.reply(`\n${unassigned} role(s) have been removed successfully.`)
             .then(msg=>{
-                setTimeout(() => msg.delete(), 10000)
+                setTimeout(() => msg.delete(), 6000)
             });
 	},
 };

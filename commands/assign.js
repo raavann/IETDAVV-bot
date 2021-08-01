@@ -1,6 +1,7 @@
 const ROLES = require('../roles.json')
 module.exports = {
-	name: 'assign',
+	name: 'assign', 
+    aliases: ['as'],
 	description: 'Assigns self-assignable roles!',
 	execute(message, args) {
 
@@ -16,7 +17,7 @@ module.exports = {
 
 		message.reply(`\n${assigned} role(s) have been assigned successfully.`)
             .then(msg=>{
-                setTimeout(() => msg.delete(), 10000)
+                setTimeout(() => msg.delete(), 6000)
             });
 	},
 };
