@@ -30,9 +30,12 @@ client.on("message", message => {
 
     if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-    const args = message.content.slice(prefix.length).trim().split(/ +/);
+    const args = message.content.toLowerCase().slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
 
+    console.log(args);
+    return;
+    
     const command = client.commands.get(commandName)
         || client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 
@@ -42,15 +45,6 @@ client.on("message", message => {
         }
         return;
     }
-
-	if (command.args && !args.length) {
-		let reply = `You didn't provide any arguments, ${message.author}!`;
-
-		if (command.usage) {
-			reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
-		}
-		return message.channel.send(reply);
-	}
 
 	try {
 		command.execute(message, args)
